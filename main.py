@@ -1,22 +1,18 @@
 import time
 from processmonitor import getprocesslist
-from Keyboard_action_monitor import keyboard_action
 from behavior_monitor import risk_measure
 from logger import logs
 
 print("start")
-
+risk_thres=1
 while True:
-    keyscore=keyboard_action()
-
     for proc in getprocesslist():
         try:
-            risk=risk_measure(proc,keyscore)
-            if risk>=3:
-                print(f"High risk process detected: {proc['name']} (PID: {proc['pid']}) with risk score {risk}")
-                logs(f"High risk process detected: {proc['name']} (PID: {proc['pid']}) with risk score {risk}")
-        except:
-            pass
-
-    time.sleep(5)
-
+            risk = risk_measure(proc)
+            if risk >= risk_thres:
+                logs(f"Suspicious process detected: {proc['name']} (PID: {proc['pid']}) with risk score: {risk}")
+                print(f"Suspicious process detected: {proc['name']} (PID: {proc['pid']}) with risk score: {risk}")
+        except Exception as e:
+            print(f"Error processing {proc['name']} (PID: {proc['pid']}): {e}")
+        
+        time.sleep(2)
