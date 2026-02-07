@@ -1,19 +1,36 @@
-def suspicious(path):
+import os
+
+suspicious= ["temp", "appdata", "downloads"]
+trusted= ["windows", "program files"]
+
+def suspiciouspath(path):
     if not path:
         return False
-    path=path.lower()
-    return "temp" in path or "appdata" in path
 
-def risk_measure(proc,key_count):
-    risk=0
+    path = path.lower()
+
+    if any(tp in path for tp in trusted):
+        return False
+
+    return any(sp in path for sp in suspicious)
+
+def risk_measure(proc):
+    risk = 0
+
     try:
-        if suspicious(proc.exe()):
-            risk+=1
-        if proc.cpu_percent()>30:
-            risk+=1
-        if key_count>20:
-            risk+=2
-    except:
+        exe = proc.exe()
+        name = proc.name().lower()
+
+        if suspiciouspath(exe):
+            risk += 2
+
+        if len(name) <= 4 or name.count(".") > 1:
+            risk += 1
+        if proc.cpu_percent(interval=0.1) > 15:
+            risk += 1
+
+        print(f"Process: {name}, Path: {exe}, Risk Score: {risk}")
+    except Exception:
         pass
     return risk
 
