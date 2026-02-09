@@ -1,0 +1,2 @@
+2026-02-09 19:23:30.735293 - Suspicious process detected: wps.exe (PID: 2412) with risk score: 2
+2026-02-09 19:23:32.691788 - Suspicious process detected: python.exe (PID: 3380) with risk score: 2

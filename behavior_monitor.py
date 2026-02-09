@@ -18,7 +18,7 @@ def risk_measure(proc):
     risk = 0
 
     try:
-        exe = proc.exe()
+        exe = proc.exe().lower()
         name = proc.name().lower()
 
         if suspiciouspath(exe):
@@ -26,11 +26,13 @@ def risk_measure(proc):
 
         if len(name) <= 4 or name.count(".") > 1:
             risk += 1
-        if proc.cpu_percent(interval=0.1) > 15:
+
+        cpu=proc.cpu_percent(interval=0.1)
+        if cpu>15:
             risk += 1
 
         print(f"Process: {name}, Path: {exe}, Risk Score: {risk}")
-    except Exception:
-        pass
+    except Exception as e:
+        print(f"error--->",e)
     return risk
 
